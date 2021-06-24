@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
+import {View, ScrollView, TouchableOpacity, Dimensions} from 'react-native';
 import {Images} from './src/theme/images';
 import {Icon} from 'react-native-elements';
 import Snap from './src/components/snapImages';
@@ -24,19 +24,19 @@ const _snapArray = [
   },
 ];
 export default App = () => {
+  const [offsetx, setOffsetX] = useState(0);
+  const windowWidth = parseInt(Dimensions.get('screen').width);
   const goToFirst = () => {
     scroll.scrollTo({x: 0, y: 0, animated: true});
   };
   const goToSecond = () => {
-    scroll.scrollTo({x: 360, y: 0, animated: true});
+    scroll.scrollTo({x: windowWidth-21, y: 0, animated: true});
   };
   const goToLast = () => {
-    scroll.scrollTo({x: 720, y: 0, animated: true});
+    scroll.scrollTo({x: (windowWidth-21)*2, y: 0, animated: true});
   };
-  const [toggle, setToggle] = useState(true);
-  const toggleFunction = () => {
-    setToggle(!toggle ? 'gray' : 'black');
-  };
+  console.log(offsetx);
+  console.log(windowWidth)
   return (
     <View>
       <ScrollView
@@ -47,8 +47,13 @@ export default App = () => {
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         decelerationRate="fast"
-        snapToInterval={360}
-        snapToAlignment={'center'}>
+        pagingEnabled={true}
+        snapToInterval={windowWidth-21}
+        snapToAlignment={'center'}
+        onScroll={(event) => {
+          setOffsetX(parseInt(event.nativeEvent.contentOffset.x))
+        }}
+        >
         {_snapArray.map((x, index) => (
           <Snap
             key={index}
@@ -64,21 +69,21 @@ export default App = () => {
             name="circle"
             type="font-awesome"
             size={10}
-            color={toggle ? 'gray' : 'black'}></Icon>
+            color={offsetx==0 ? 'black' : 'gray'}></Icon>
         </TouchableOpacity>
         <TouchableOpacity style={styles.circle} onPress={goToSecond}>
           <Icon
             name="circle"
             type="font-awesome"
             size={10}
-            color={toggle ? 'gray' : 'black'}></Icon>
+            color={offsetx==windowWidth-21 ? 'black' : 'gray'}></Icon>
         </TouchableOpacity>
         <TouchableOpacity style={styles.circle} onPress={goToLast}>
           <Icon
             name="circle"
             type="font-awesome"
             size={10}
-            color={toggle ? 'gray' : 'black'}></Icon>
+            color={offsetx>windowWidth-21 ? 'black' : 'gray'}></Icon>
         </TouchableOpacity>
       </View>
     </View>

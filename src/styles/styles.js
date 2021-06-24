@@ -1,5 +1,6 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 
+const windowWidth = Dimensions.get('screen').width;
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -22,7 +23,7 @@ export const styles = StyleSheet.create({
     color: 'white'
   },
   image: {
-    width: 320,
+    width: windowWidth-60,
     height: 200
   },
   foodText: {
